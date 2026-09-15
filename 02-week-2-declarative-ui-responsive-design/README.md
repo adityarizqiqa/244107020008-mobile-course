@@ -29,7 +29,33 @@ Pertanyaan: Periksa kembali rekomendasi layout di atas: apakah tetap responsif d
 
 Dokumentasi:
 
+Refleksi:
+
+1. Perbedaan Cara Berpikir Imperative dan Declarative saat Membangun UI
+    -  Imperative UI: Berfokus pada "bagaimana" (how) cara mengubah UI selangkah demi selangkah. Pengembang harus mencari elemen UI terlebih dahulu (misalnya menggunakan findViewById di Android lama), lalu memanggil metode untuk mengubah nilainya secara manual saat ada aksi (contoh: textView.setText("Hello")). UI dimanipulasi secara langsung.
+
+    - Declarative UI: Berfokus pada "apa" (what) yang harus ditampilkan oleh UI berdasarkan state (status) saat ini. Di Flutter, UI adalah cerminan dari state. Kita tidak mengubah widget secara manual; kita hanya mengubah state-nya (misalnya melalui setState), dan kerangka kerja (framework) akan secara otomatis membangun ulang (rebuild) UI agar sesuai dengan state terbaru.
+
+2. Kapan Expanded Membantu dan Kapan Menghasilkan Layout Error
+    - Sangat Membantu: Saat digunakan di dalam widget yang memiliki batas ruang (bounded constraints) yang jelas, seperti Row atau Column. Expanded berguna untuk menyuruh sebuah widget mengisi seluruh sisa ruang kosong yang tersedia secara proporsional dan fleksibel, mencegah area kosong yang tidak terpakai.
+
+    - Menghasilkan Error: Saat diletakkan di dalam widget yang ukurannya tidak terbatas (unbounded constraints), seperti di dalam SingleChildScrollView (baik vertikal maupun horizontal) atau di dalam Row/Column lain yang tidak dibatasi ukurannya. Expanded akan mencoba mengambil ruang tak terhingga, yang berujung pada error RenderFlex children have non-zero flex but incoming constraints are unbounded.
+
+3. Bagaimana Breakpoint dan Theme Memengaruhi Pengalaman Pengguna (UX)
+    - Breakpoint: Sangat krusial untuk responsivitas. Dengan menentukan titik batas lebar layar (misalnya 700px), aplikasi dapat beradaptasi. Pengguna di layar kecil (HP) tidak akan melihat konten yang terpotong atau terlalu sempit, dan pengguna di layar besar (Tablet/Desktop) tidak akan melihat antarmuka yang merenggang aneh, melainkan dioptimalkan menjadi beberapa kolom.
+
+    - Theme: Memengaruhi aksesibilitas visual dan kenyamanan. Penyediaan Light Theme menjaga keterbacaan (contrast ratio) di lingkungan terang, sementara Dark Theme mengurangi ketegangan mata pengguna di lingkungan gelap serta menghemat daya pada layar OLED. Menggunakan Theme.of(context) memastikan seluruh aplikasi memiliki palet warna yang konsisten tanpa hardcode.
+
+4. Apa yang Diverifikasi dari Rekomendasi AI Setelah Tugas Inti Selesai
+    - Kebenaran Logika Testing: Memverifikasi bahwa kode dari AI (penambahan .first pada find.byType(Card)) memang benar-benar memperbaiki error Bad state: Too many elements sehingga pengujian flutter test berhasil lulus 100%.
+
+    - Responsivitas Aktual: Memastikan rekomendasi penggunaan LayoutBuilder dan konstanta breakpoint benar-benar berjalan saat layar emulator dirotasi (berubah dari 1 kolom menjadi 2 kolom).
+
+    - Aksesibilitas dan Stabilitas: Mengonfirmasi bahwa label Semantics terbaca sesuai konteks (tidak ganda/berulang berkat excludeSemantics), serta memastikan tidak ada error atau peringatan baru dari flutter analyze terkait rekomendasi widget yang diberikan.
+
+
 Praktikum layout sederhana (warm-up):
+
 ![alt text](<screenshots/Praktikum layout sederhana (warm-up)/Hasil penambahan row + expanded dan data diri.png>) 
 ![alt text](<screenshots/Praktikum layout sederhana (warm-up)/layout sederhana (warm-up).png>) 
 ![alt text](<screenshots/Praktikum layout sederhana (warm-up)/Menghapus Expanded.png>) 
@@ -38,6 +64,7 @@ Praktikum layout sederhana (warm-up):
 ![alt text](<screenshots/Praktikum layout sederhana (warm-up)/Ukuran box setelah dirubah.png>)
 
 Praktikum dashboard responsif:
+
 ![alt text](<screenshots/Praktikum dashboard responsif/Hasil run awal.png>) 
 ![alt text](<screenshots/Praktikum dashboard responsif/Landscape Dark.jpeg>) 
 ![alt text](<screenshots/Praktikum dashboard responsif/Landscape Light.jpeg>) 
@@ -52,6 +79,7 @@ Praktikum dashboard responsif:
 ![alt text](<screenshots/Praktikum dashboard responsif/Theme system 2.jpeg>)
 
 Tugas dan AI design exploration:
+
 ![alt text](<screenshots/Tugas dan AI design exploration/Dark theme landscape.png>)
 ![alt text](<screenshots/Tugas dan AI design exploration/Dark theme potrait.png>) 
 ![alt text](<screenshots/Tugas dan AI design exploration/Hasil Analyze.png>) 
