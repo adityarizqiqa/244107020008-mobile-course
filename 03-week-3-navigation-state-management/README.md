@@ -40,7 +40,9 @@ Refleksi:
 
     Pola ini sangat krusial diimplementasikan pada aplikasi yang berbasis linimasa atau data yang terus diperbarui secara dinamis, seperti feed media sosial, aplikasi berita, daftar produk (e-commerce), atau dasbor metrik, di mana retensi informasi di layar meningkatkan kenyamanan pengalaman pengguna (UX).
 
-[text](<screenshots/Praktikum 3 - AsyncValue loading error success>)
+![alt text](<screenshots/Praktikum 3 - AsyncValue loading error success/image.png>) 
+![alt text](<screenshots/Praktikum 3 - AsyncValue loading error success/Screenshot 2026-09-22 110636.png>) 
+![alt text](<screenshots/Praktikum 3 - AsyncValue loading error success/Screenshot 2026-09-22 111742.png>)
 
 ## Praktikum 4 - AI Challenge
 -
@@ -65,12 +67,19 @@ Refleksi:
     6. Jalankan flutter analyze dan flutter test, apakah hasil AI lolos tanpa warning?**
     **Lolos tanpa masalah.** Kodingan mematuhi pedoman linter bawaan Dart. Uji coba (test) dibuat tangguh (tidak *flaky*) terhadap probabilitas error 30% dengan mengecek *initial state* (`AsyncLoading`) dan *final resolution state* (baik sukses maupun gagal, asalkan bukan lagi *loading*).
 
-[text](<screenshots/Praktikum 4 - AI Challenge>)
+![alt text](<screenshots/Praktikum 4 - AI Challenge/image.png>)
 
 
 ## Lampiran dokumentasi:
-[text](<screenshots/Praktikum 1 - Aplikasi multi-page dengan GoRouter>) 
-[text](<screenshots/Praktikum 2 - Aplikasi ToDo dengan Riverpod>) 
-[text](<screenshots/Praktikum 3 - AsyncValue loading error success>) 
-[text](<screenshots/Praktikum 4 - AI Challenge>) 
-[text](<screenshots/Praktikum 5 - Refactoring Challenge>)
+![alt text](<screenshots/Praktikum 1 - Aplikasi multi-page dengan GoRouter/image.png>)
+![alt text](<screenshots/Praktikum 2 - Aplikasi ToDo dengan Riverpod/image.png>) 
+![alt text](<screenshots/Praktikum 2 - Aplikasi ToDo dengan Riverpod/Screenshot 2026-09-22 104537.png>) 
+![alt text](<screenshots/Praktikum 2 - Aplikasi ToDo dengan Riverpod/Screenshot 2026-09-22 104723.png>)
+![alt text](<screenshots/Praktikum 3 - AsyncValue loading error success/image.png>) 
+![alt text](<screenshots/Praktikum 3 - AsyncValue loading error success/Screenshot 2026-09-22 110636.png>) 
+![alt text](<screenshots/Praktikum 3 - AsyncValue loading error success/Screenshot 2026-09-22 111742.png>)
+![alt text](<screenshots/Praktikum 4 - AI Challenge/image.png>)
+![alt text](<screenshots/Praktikum 5 - Refactoring Challenge/image.png>) 
+![alt text](<screenshots/Praktikum 5 - Refactoring Challenge/Screenshot 2026-09-22 192800.png>) 
+![alt text](<screenshots/Praktikum 5 - Refactoring Challenge/Screenshot 2026-09-22 192846.png>) 
+![alt text](<screenshots/Praktikum 5 - Refactoring Challenge/Screenshot 2026-09-22 192922.png>)
