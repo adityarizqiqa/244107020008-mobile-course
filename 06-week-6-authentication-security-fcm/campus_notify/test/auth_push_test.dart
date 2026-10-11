@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:campus_notify/data/api_errors.dart';
 import 'package:campus_notify/routes.dart';
 
 class FakeTokenStore {
@@ -30,5 +32,29 @@ void main() {
     final store = FakeTokenStore()..refresh = '';
     final needsLogin = (store.refresh ?? '').isEmpty;
     expect(needsLogin, isTrue);
+  });
+
+  test('readableApiError memetakan DioException ke pesan ramah pengguna', () {
+    final timeoutError = DioException(
+      requestOptions: RequestOptions(path: '/test'),
+      type: DioExceptionType.connectionTimeout,
+    );
+    expect(readableApiError(timeoutError), contains('timeout'));
+
+    final offlineError = DioException(
+      requestOptions: RequestOptions(path: '/test'),
+      type: DioExceptionType.connectionError,
+    );
+    expect(readableApiError(offlineError), contains('offline'));
+
+    final unauthorizedError = DioException(
+      requestOptions: RequestOptions(path: '/test'),
+      type: DioExceptionType.badResponse,
+      response: Response(
+        statusCode: 401,
+        requestOptions: RequestOptions(path: '/test'),
+      ),
+    );
+    expect(readableApiError(unauthorizedError), contains('kedaluwarsa'));
   });
 }

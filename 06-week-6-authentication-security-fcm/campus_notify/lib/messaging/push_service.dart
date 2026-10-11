@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../routes.dart';
 
@@ -7,17 +9,30 @@ final FlutterLocalNotificationsPlugin _local = FlutterLocalNotificationsPlugin()
 String? pendingDeepLink;
 void Function(String route)? _navigationCallback;
 
+bool _isFirebaseReady() {
+  return Firebase.apps.isNotEmpty;
+}
+
 Future<bool> requestNotificationPermission() async {
-  final settings = await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-    announcement: false,
-    carPlay: false,
-    criticalAlert: false,
-  );
-  return settings.authorizationStatus == AuthorizationStatus.authorized ||
-      settings.authorizationStatus == AuthorizationStatus.provisional;
+  if (!_isFirebaseReady()) {
+    debugPrint('[PushService] Firebase belum diinisialisasi, lewati permintaan izin FCM.');
+    return false;
+  }
+  try {
+    final settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      announcement: false,
+      carPlay: false,
+      criticalAlert: false,
+    );
+    return settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional;
+  } catch (e) {
+    debugPrint('[PushService] Gagal meminta izin notifikasi: $e');
+    return false;
+  }
 }
 
 Future<void> initLocalNotifications() async {
@@ -42,26 +57,44 @@ Future<void> initLocalNotifications() async {
 Future<void> initFcmToken({
   required Future<void> Function(String token) onToken,
 }) async {
-  // 1. Ambil token saat ini dan kirim ke backend.
-  final token = await FirebaseMessaging.instance.getToken();
-  if (token != null) {
-    await onToken(token);
+  if (!_isFirebaseReady()) {
+    debugPrint('[PushService] Firebase belum diinisialisasi, lewati initFcmToken.');
+    return;
   }
+  try {
+    // 1. Ambil token saat ini dan kirim ke backend.
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      await onToken(token);
+    }
 
-  // 2. Token bisa berubah (reinstall, clear data, rotasi keamanan).
-  //    Listener ini WAJIB ada, jika tidak backend menyimpan token basi.
-  FirebaseMessaging.instance.onTokenRefresh.listen(onToken);
+    // 2. Token bisa berubah (reinstall, clear data, rotasi keamanan).
+    //    Listener ini WAJIB ada, jika tidak backend menyimpan token basi.
+    FirebaseMessaging.instance.onTokenRefresh.listen(onToken);
 
-  // 3. Langganan topik kampus (mis. semua mahasiswa angkatan).
-  await subscribeToTopic('pengumuman-kampus');
+    // 3. Langganan topik kampus (mis. semua mahasiswa angkatan).
+    await subscribeToTopic('pengumuman-kampus');
+  } catch (e) {
+    debugPrint('[PushService] Error inisialisasi token FCM: $e');
+  }
 }
 
 Future<void> subscribeToTopic(String topic) async {
-  await FirebaseMessaging.instance.subscribeToTopic(topic);
+  if (!_isFirebaseReady()) return;
+  try {
+    await FirebaseMessaging.instance.subscribeToTopic(topic);
+  } catch (e) {
+    debugPrint('[PushService] Gagal subscribe ke topik $topic: $e');
+  }
 }
 
 Future<void> unsubscribeFromTopic(String topic) async {
-  await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+  if (!_isFirebaseReady()) return;
+  try {
+    await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+  } catch (e) {
+    debugPrint('[PushService] Gagal unsubscribe dari topik $topic: $e');
+  }
 }
 
 // Background handler WAJIB top-level karena berjalan di isolate terpisah
@@ -72,11 +105,18 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void registerBackgroundHandler() {
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  if (!_isFirebaseReady()) return;
+  try {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  } catch (e) {
+    debugPrint('[PushService] Gagal mendaftarkan background handler: $e');
+  }
 }
 
 void listenForeground(void Function(String route) go) {
   _navigationCallback = go;
+
+  if (!_isFirebaseReady()) return;
 
   // Foreground: sistem TIDAK menampilkan banner otomatis,
   // jadi tampilkan manual via local notification.
@@ -104,11 +144,18 @@ void listenForeground(void Function(String route) go) {
 }
 
 Future<void> handleTerminated(void Function(String route) go) async {
-  // Terminated -> dibuka dari notifikasi.
-  final initial = await FirebaseMessaging.instance.getInitialMessage();
-  if (initial != null) {
-    go(routeFromMessage(initial.data));
+  if (_isFirebaseReady()) {
+    try {
+      // Terminated -> dibuka dari notifikasi.
+      final initial = await FirebaseMessaging.instance.getInitialMessage();
+      if (initial != null) {
+        go(routeFromMessage(initial.data));
+      }
+    } catch (e) {
+      debugPrint('[PushService] Error membaca initial message: $e');
+    }
   }
+
   if (pendingDeepLink != null) {
     final route = pendingDeepLink!;
     pendingDeepLink = null;

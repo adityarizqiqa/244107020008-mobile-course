@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/api_errors.dart';
 import '../providers/auth_providers.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -31,7 +32,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (authState.hasError && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Login Gagal: ${authState.error}'),
+            content: Text('Login Gagal: ${readableApiError(authState.error)}'),
             backgroundColor: Colors.red,
           ),
         );
