@@ -2,7 +2,9 @@ import 'package:clean_architecture/core/failures.dart';
 import 'package:clean_architecture/features/notes/domain/entities/note.dart';
 import 'package:clean_architecture/features/notes/domain/repositories/note_repository.dart';
 import 'package:clean_architecture/features/notes/domain/usecases/add_note.dart';
+import 'package:clean_architecture/features/notes/domain/usecases/delete_note.dart';
 import 'package:clean_architecture/features/notes/domain/usecases/get_notes.dart';
+import 'package:clean_architecture/features/notes/domain/usecases/update_note.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class FakeNoteRepository implements NoteRepository {
@@ -28,10 +30,7 @@ class FakeNoteRepository implements NoteRepository {
     String body = '',
   }) async {
     if (fail) {
-      return (
-        note: null,
-        failure: const LocalFailure('db error'),
-      );
+      return (note: null, failure: const LocalFailure('db error'));
     }
     final created = Note(
       id: items.length + 1,
@@ -71,9 +70,9 @@ class FakeNoteRepository implements NoteRepository {
 void main() {
   group('GetNotes Use Case Tests', () {
     test('GetNotes meneruskan daftar dari repository', () async {
-      final repo = FakeNoteRepository(items: [
-        Note(title: 'A', updatedAt: DateTime(2026, 9, 27)),
-      ]);
+      final repo = FakeNoteRepository(
+        items: [Note(title: 'A', updatedAt: DateTime(2026, 9, 27))],
+      );
       final result = await GetNotes(repo).call();
       expect(result.failure, isNull);
       expect(result.notes.length, 1);
@@ -89,21 +88,94 @@ void main() {
   });
 
   group('AddNote Use Case Validation & Execution Tests', () {
-    test('AddNote menolak input judul kosong dengan ValidationFailure', () async {
-      final repo = FakeNoteRepository();
-      final result = await AddNote(repo).call(title: '   ', body: 'Deskripsi');
-      expect(result.failure, isA<ValidationFailure>());
-      expect(result.note, isNull);
-      expect(result.failure!.message, contains('tidak boleh kosong'));
-    });
+    test(
+      'AddNote menolak input judul kosong dengan ValidationFailure',
+      () async {
+        final repo = FakeNoteRepository();
+        final result = await AddNote(repo)
+            .call(title: '   ', body: 'Deskripsi');
+        expect(result.failure, isA<ValidationFailure>());
+        expect(result.note, isNull);
+        expect(result.failure!.message, contains('tidak boleh kosong'));
+      },
+    );
 
     test('AddNote berhasil menambahkan catatan dengan judul valid', () async {
       final repo = FakeNoteRepository();
-      final result = await AddNote(repo).call(title: 'Catatan Baru', body: 'Isi');
+      final result = await AddNote(repo)
+          .call(title: 'Catatan Baru', body: 'Isi');
       expect(result.failure, isNull);
       expect(result.note, isNotNull);
       expect(result.note!.title, 'Catatan Baru');
       expect(result.note!.dirty, isTrue);
     });
+  });
+
+  group('UpdateNote & DeleteNote Domain Boundary Validation Tests', () {
+    test(
+      'UpdateNote menolak ID non-positif dengan ValidationFailure',
+      () async {
+        final repo = FakeNoteRepository();
+        final result = await UpdateNote(repo)
+            .call(id: -1, title: 'Judul Baru', body: 'Deskripsi');
+        expect(result.note, isNull);
+        expect(result.failure, isA<ValidationFailure>());
+        expect(result.failure?.message, contains('ID catatan tidak valid'));
+      },
+    );
+
+    test('UpdateNote menolak judul kosong dengan ValidationFailure', () async {
+      final repo = FakeNoteRepository();
+      final result = await UpdateNote(repo)
+          .call(id: 1, title: '   ', body: 'Deskripsi');
+      expect(result.note, isNull);
+      expect(result.failure, isA<ValidationFailure>());
+      expect(result.failure?.message, contains('tidak boleh kosong'));
+    });
+
+    test(
+      'DeleteNote menolak ID non-positif dengan ValidationFailure',
+      () async {
+        final repo = FakeNoteRepository();
+        final result = await DeleteNote(repo).call(0);
+        expect(result.success, isFalse);
+        expect(result.failure, isA<ValidationFailure>());
+        expect(result.failure?.message, contains('ID catatan tidak valid'));
+      },
+    );
+  });
+
+  group('UpdateNote & DeleteNote Domain Boundary Validation Tests', () {
+    test(
+      'UpdateNote menolak ID non-positif dengan ValidationFailure',
+      () async {
+        final repo = FakeNoteRepository();
+        final result = await UpdateNote(repo)
+            .call(id: -1, title: 'Judul Baru', body: 'Deskripsi');
+        expect(result.note, isNull);
+        expect(result.failure, isA<ValidationFailure>());
+        expect(result.failure?.message, contains('ID catatan tidak valid'));
+      },
+    );
+
+    test('UpdateNote menolak judul kosong dengan ValidationFailure', () async {
+      final repo = FakeNoteRepository();
+      final result = await UpdateNote(repo)
+          .call(id: 1, title: '   ', body: 'Deskripsi');
+      expect(result.note, isNull);
+      expect(result.failure, isA<ValidationFailure>());
+      expect(result.failure?.message, contains('tidak boleh kosong'));
+    });
+
+    test(
+      'DeleteNote menolak ID non-positif dengan ValidationFailure',
+      () async {
+        final repo = FakeNoteRepository();
+        final result = await DeleteNote(repo).call(0);
+        expect(result.success, isFalse);
+        expect(result.failure, isA<ValidationFailure>());
+        expect(result.failure?.message, contains('ID catatan tidak valid'));
+      },
+    );
   });
 }

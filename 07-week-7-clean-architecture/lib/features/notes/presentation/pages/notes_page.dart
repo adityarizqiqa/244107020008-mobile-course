@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/format.dart';
 import '../../domain/entities/note.dart';
 import '../providers/notes_providers.dart';
@@ -25,7 +26,9 @@ class NotesPage extends ConsumerWidget {
             ),
             onPressed: () async {
               final scaffoldMessenger = ScaffoldMessenger.of(context);
-              final syncResult = await ref.read(syncNotesUseCaseProvider).call();
+              final syncResult = await ref
+                  .read(syncNotesUseCaseProvider)
+                  .call();
               if (syncResult.failure != null) {
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
@@ -38,7 +41,9 @@ class NotesPage extends ConsumerWidget {
                 ref.invalidate(dirtyCountProvider);
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
-                    content: Text('${syncResult.syncedCount} catatan berhasil disinkronkan!'),
+                    content: Text(
+                      '${syncResult.syncedCount} catatan berhasil disinkronkan!',
+                    ),
                     backgroundColor: Colors.green.shade700,
                   ),
                 );
@@ -56,9 +61,7 @@ class NotesPage extends ConsumerWidget {
         ],
       ),
       body: notesState.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -87,7 +90,11 @@ class NotesPage extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.note_alt_outlined, size: 64, color: Colors.grey.shade400),
+                    Icon(
+                      Icons.note_alt_outlined,
+                      size: 64,
+                      color: Colors.grey.shade400,
+                    ),
                     const SizedBox(height: 12),
                     const Text(
                       'Belum ada catatan.',
@@ -107,7 +114,10 @@ class NotesPage extends ConsumerWidget {
                   ref.invalidate(dirtyCountProvider);
                 },
                 child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   itemCount: notes.length,
                   separatorBuilder: (_, index) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
@@ -118,22 +128,33 @@ class NotesPage extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         title: Row(
                           children: [
                             Expanded(
                               child: Text(
                                 note.title,
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                             if (note.dirty)
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.amber.shade100,
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: Colors.amber.shade700),
+                                  border: Border.all(
+                                    color: Colors.amber.shade700,
+                                  ),
                                 ),
                                 child: Text(
                                   'Unsynced',
@@ -190,9 +211,16 @@ class NotesPage extends ConsumerWidget {
                               value: 'delete',
                               child: Row(
                                 children: [
-                                  Icon(Icons.delete_outline, size: 20, color: Colors.red),
+                                  Icon(
+                                    Icons.delete_outline,
+                                    size: 20,
+                                    color: Colors.red,
+                                  ),
                                   SizedBox(width: 8),
-                                  Text('Hapus', style: TextStyle(color: Colors.red)),
+                                  Text(
+                                    'Hapus',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
                                 ],
                               ),
                             ),
@@ -256,7 +284,9 @@ class NotesPage extends ConsumerWidget {
               final nav = Navigator.of(dialogCtx);
 
               if (isEditing) {
-                final result = await ref.read(updateNoteUseCaseProvider).call(
+                final result = await ref
+                    .read(updateNoteUseCaseProvider)
+                    .call(
                       id: note.id!,
                       title: titleController.text,
                       body: bodyController.text,
@@ -271,7 +301,9 @@ class NotesPage extends ConsumerWidget {
                   ref.invalidate(dirtyCountProvider);
                 }
               } else {
-                final result = await ref.read(addNoteUseCaseProvider).call(
+                final result = await ref
+                    .read(addNoteUseCaseProvider)
+                    .call(
                       title: titleController.text,
                       body: bodyController.text,
                     );
@@ -309,7 +341,9 @@ class NotesPage extends ConsumerWidget {
             onPressed: () async {
               final nav = Navigator.of(dialogCtx);
               final scaffoldMessenger = ScaffoldMessenger.of(context);
-              final result = await ref.read(deleteNoteUseCaseProvider).call(note.id!);
+              final result = await ref
+                  .read(deleteNoteUseCaseProvider)
+                  .call(note.id!);
               nav.pop();
               if (result.failure != null) {
                 scaffoldMessenger.showSnackBar(

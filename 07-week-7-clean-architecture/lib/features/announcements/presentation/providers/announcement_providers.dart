@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../data/repositories/announcement_repository_impl.dart';
 import '../../domain/entities/announcement.dart';
 import '../../domain/repositories/announcement_repository.dart';
@@ -15,7 +16,9 @@ final getAnnouncementsUseCaseProvider = Provider<GetAnnouncements>((ref) {
   return GetAnnouncements(ref.watch(announcementRepositoryProvider));
 });
 
-final getAnnouncementDetailUseCaseProvider = Provider<GetAnnouncementDetail>((ref) {
+final getAnnouncementDetailUseCaseProvider = Provider<GetAnnouncementDetail>((
+  ref,
+) {
   return GetAnnouncementDetail(ref.watch(announcementRepositoryProvider));
 });
 
@@ -28,8 +31,10 @@ final announcementsProvider = FutureProvider<List<Announcement>>((ref) async {
   return result.announcements;
 });
 
-final announcementDetailProvider =
-    FutureProvider.family<Announcement, int>((ref, id) async {
+final announcementDetailProvider = FutureProvider.family<Announcement, int>((
+  ref,
+  id,
+) async {
   final result = await ref.watch(getAnnouncementDetailUseCaseProvider).call(id);
   if (result.failure != null) {
     throw Exception(result.failure!.message);

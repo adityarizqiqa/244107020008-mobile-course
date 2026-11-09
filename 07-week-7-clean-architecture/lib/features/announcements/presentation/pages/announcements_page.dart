@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/format.dart';
 import '../providers/announcement_providers.dart';
 
@@ -54,7 +55,10 @@ class AnnouncementsPage extends ConsumerWidget {
                   ref.invalidate(announcementsProvider);
                 },
                 child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   itemCount: announcements.length,
                   separatorBuilder: (_, index) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
@@ -103,7 +107,9 @@ class AnnouncementsPage extends ConsumerWidget {
                                     formatRelativeDate(item.publishedAt),
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Theme.of(context).colorScheme.outline,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .outline,
                                     ),
                                   ),
                                 ],
@@ -123,7 +129,9 @@ class AnnouncementsPage extends ConsumerWidget {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -132,14 +140,18 @@ class AnnouncementsPage extends ConsumerWidget {
                                   Icon(
                                     Icons.campaign_outlined,
                                     size: 16,
-                                    color: Theme.of(context).colorScheme.primary,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
                                     item.author,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Theme.of(context).colorScheme.primary,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/format.dart';
 import '../providers/announcement_providers.dart';
 
 class AnnouncementDetailPage extends ConsumerWidget {
-  const AnnouncementDetailPage({
-    super.key,
-    required this.id,
-  });
+  const AnnouncementDetailPage({super.key, required this.id});
 
   final int id;
 
@@ -16,9 +14,7 @@ class AnnouncementDetailPage extends ConsumerWidget {
     final detailState = ref.watch(announcementDetailProvider(id));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Detail Pengumuman'),
-      ),
+      appBar: AppBar(title: const Text('Detail Pengumuman')),
       body: detailState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(
@@ -36,7 +32,8 @@ class AnnouncementDetailPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => ref.invalidate(announcementDetailProvider(id)),
+                  onPressed: () =>
+                      ref.invalidate(announcementDetailProvider(id)),
                   child: const Text('Coba Lagi'),
                 ),
               ],
@@ -49,7 +46,10 @@ class AnnouncementDetailPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(8),
@@ -65,9 +65,8 @@ class AnnouncementDetailPage extends ConsumerWidget {
               const SizedBox(height: 12),
               Text(
                 announcement.title,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(context).textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Row(
@@ -96,10 +95,7 @@ class AnnouncementDetailPage extends ConsumerWidget {
               const Divider(height: 32),
               Text(
                 announcement.content,
-                style: const TextStyle(
-                  fontSize: 15,
-                  height: 1.6,
-                ),
+                style: const TextStyle(fontSize: 15, height: 1.6),
               ),
             ],
           ),

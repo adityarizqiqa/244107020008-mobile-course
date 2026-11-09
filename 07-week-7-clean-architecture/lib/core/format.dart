@@ -44,7 +44,10 @@ int? parseIdFromRoute(String path) {
 /// Mengekstrak parameter rute berdasarkan kunci placeholder (contoh: pattern '/notes/:id', path '/notes/12' -> 12)
 String? parseRouteParam(String path, String pattern, String paramName) {
   final pathSegments = path.split('/').where((s) => s.isNotEmpty).toList();
-  final patternSegments = pattern.split('/').where((s) => s.isNotEmpty).toList();
+  final patternSegments = pattern
+      .split('/')
+      .where((s) => s.isNotEmpty)
+      .toList();
 
   if (pathSegments.length != patternSegments.length) {
     return null;

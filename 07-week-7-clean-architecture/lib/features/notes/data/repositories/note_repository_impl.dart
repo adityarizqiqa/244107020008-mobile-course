@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
+
 import '../../../../core/failures.dart';
 import '../../domain/entities/note.dart';
 import '../../domain/repositories/note_repository.dart';
@@ -73,10 +74,7 @@ class NoteRepositoryImpl implements NoteRepository {
       );
       return (note: created, failure: null);
     } catch (e) {
-      return (
-        note: null,
-        failure: LocalFailure('Gagal menyimpan catatan: $e'),
-      );
+      return (note: null, failure: LocalFailure('Gagal menyimpan catatan: $e'));
     }
   }
 
@@ -167,7 +165,9 @@ class NoteRepositoryImpl implements NoteRepository {
       }
 
       final db = await openDb();
-      final rows = await db.rawQuery('SELECT COUNT(*) as cnt FROM notes WHERE dirty = 1');
+      final rows = await db.rawQuery(
+        'SELECT COUNT(*) as cnt FROM notes WHERE dirty = 1',
+      );
       final count = (rows.first['cnt'] as num?)?.toInt() ?? 0;
       return (count: count, failure: null);
     } catch (e) {
@@ -199,11 +199,9 @@ class NoteRepositoryImpl implements NoteRepository {
       }
 
       final db = await openDb();
-      final affected = await db.update(
-        'notes',
-        {'dirty': 0},
-        where: 'dirty = 1',
-      );
+      final affected = await db.update('notes', {
+        'dirty': 0,
+      }, where: 'dirty = 1');
       return (syncedCount: affected, failure: null);
     } catch (e) {
       return (

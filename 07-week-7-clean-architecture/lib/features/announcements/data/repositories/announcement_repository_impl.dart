@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+
 import '../../../../core/failures.dart';
 import '../../domain/entities/announcement.dart';
 import '../../domain/repositories/announcement_repository.dart';
@@ -15,8 +16,7 @@ class AnnouncementRepositoryImpl implements AnnouncementRepository {
     AnnouncementModel(
       id: 1,
       title: 'Jadwal Ujian Tengah Semester Ganjil 2026/2027',
-      content:
-          'Diberitahukan kepada seluruh mahasiswa Jurusan Teknologi Informasi bahwa UTS akan dilaksanakan secara luring mulai tanggal 19 Oktober 2026. Harap mengecek kartu ujian di SIAKAD.',
+      content: 'Diberitahukan kepada seluruh mahasiswa Jurusan Teknologi Informasi bahwa UTS akan dilaksanakan secara luring mulai tanggal 19 Oktober 2026. Harap mengecek kartu ujian di SIAKAD.',
       publishedAt: DateTime(2026, 10, 10, 8, 30),
       author: 'Bagian Akademik JTI',
       category: 'Akademik',
@@ -24,8 +24,7 @@ class AnnouncementRepositoryImpl implements AnnouncementRepository {
     AnnouncementModel(
       id: 2,
       title: 'Pendaftaran Workshop Clean Architecture & Flutter Riverpod',
-      content:
-          'Lab Mobile Programming menyelenggarakan workshop praktis Clean Architecture, State Management, dan Unit Testing. Tempat terbatas untuk 40 pendaftar pertama.',
+      content: 'Lab Mobile Programming menyelenggarakan workshop praktis Clean Architecture, State Management, dan Unit Testing. Tempat terbatas untuk 40 pendaftar pertama.',
       publishedAt: DateTime(2026, 10, 11, 13, 15),
       author: 'Lab Pemrograman Mobile',
       category: 'Workshop',
@@ -33,8 +32,7 @@ class AnnouncementRepositoryImpl implements AnnouncementRepository {
     AnnouncementModel(
       id: 3,
       title: 'Pemeliharaan Server SIAKAD & E-Learning',
-      content:
-          'Server e-learning dan SIAKAD Polinema akan mengalami downtime terjadwal pada hari Sabtu pukul 22:00 - 04:00 WIB untuk pemeliharaan berkala infrastruktur database.',
+      content: 'Server e-learning dan SIAKAD Polinema akan mengalami downtime terjadwal pada hari Sabtu pukul 22:00 - 04:00 WIB untuk pemeliharaan berkala infrastruktur database.',
       publishedAt: DateTime(2026, 10, 12, 10, 0),
       author: 'UPT Komputer & Jaringan',
       category: 'Pemeliharaan',
@@ -42,7 +40,8 @@ class AnnouncementRepositoryImpl implements AnnouncementRepository {
   ];
 
   @override
-  Future<({List<Announcement> announcements, Failure? failure})> getAnnouncements() async {
+  Future<({List<Announcement> announcements, Failure? failure})>
+  getAnnouncements() async {
     try {
       // Mensimulasikan network delay realistis
       await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -57,7 +56,9 @@ class AnnouncementRepositoryImpl implements AnnouncementRepository {
   }
 
   @override
-  Future<({Announcement? announcement, Failure? failure})> getAnnouncementById(int id) async {
+  Future<({Announcement? announcement, Failure? failure})> getAnnouncementById(
+    int id,
+  ) async {
     try {
       await Future<void>.delayed(const Duration(milliseconds: 150));
       final found = _seedAnnouncements.where((m) => m.id == id);

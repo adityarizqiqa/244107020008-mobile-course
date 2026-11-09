@@ -3,13 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('App smoke test loads Clean Architecture navigation',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const ProviderScope(
-        child: CleanArchitectureApp(),
-      ),
-    );
+  testWidgets('App smoke test loads Clean Architecture navigation', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const ProviderScope(child: CleanArchitectureApp()));
     await tester.pumpAndSettle();
 
     // Pastikan navigasi tab Catatan dan Pengumuman tampil di layar
