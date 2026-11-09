@@ -6,6 +6,12 @@ class DeleteNote {
   final NoteRepository _repository;
 
   Future<({bool success, Failure? failure})> call(int id) {
+    if (id <= 0) {
+      return Future.value((
+        success: false,
+        failure: const ValidationFailure('ID catatan tidak valid.'),
+      ));
+    }
     return _repository.deleteNote(id);
   }
 }

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import 'core/format.dart';
 import 'features/announcements/presentation/pages/announcement_detail_page.dart';
 import 'features/announcements/presentation/pages/announcements_page.dart';
 import 'features/notes/presentation/pages/notes_page.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
-final GlobalKey<NavigatorState> _shellNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shell');
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'root',
+);
+final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'shell',
+);
 
 class AppRoutes {
   static const String notes = '/notes';
@@ -28,15 +31,13 @@ final appRouter = GoRouter(
       routes: [
         GoRoute(
           path: AppRoutes.notes,
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: NotesPage(),
-          ),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: NotesPage()),
         ),
         GoRoute(
           path: AppRoutes.announcements,
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: AnnouncementsPage(),
-          ),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: AnnouncementsPage()),
         ),
       ],
     ),

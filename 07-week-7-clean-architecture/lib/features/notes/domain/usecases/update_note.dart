@@ -11,6 +11,12 @@ class UpdateNote {
     required String title,
     String body = '',
   }) {
+    if (id <= 0) {
+      return Future.value((
+        note: null,
+        failure: const ValidationFailure('ID catatan tidak valid.'),
+      ));
+    }
     if (title.trim().isEmpty) {
       return Future.value((
         note: null,

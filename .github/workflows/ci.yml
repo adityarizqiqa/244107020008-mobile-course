@@ -1,0 +1,77 @@
+name: Flutter CI / Code Quality Gate
+
+# ==============================================================================
+# Pipeline Verifikasi Otomatis (CI) Codelab Pemrograman Mobile - JTI Polinema
+# Memverifikasi integritas kode pada setiap Pull Request dan Push ke branch
+# develop dan main.
+# ==============================================================================
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+# Batalkan job yang sedang berjalan jika ada commit baru pada branch PR yang sama
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code-quality-and-tests:
+    name: Lint, Format & Automated Test Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: 07-week-7-clean-architecture
+
+    steps:
+      # Langkah 1: Checkout kode sumber repository
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Langkah 2: Setup Flutter SDK dengan caching dependensi
+      - name: 🐦 Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-${{ hashFiles(''**/pubspec.lock'') }}'
+
+      # Langkah 3: Menampilkan info versi Flutter
+      - name: 📋 Environment & Flutter Version
+        run: flutter --version
+
+      # Langkah 4: Ambil semua dependensi package Flutter
+      - name: 📦 Install Dependencies (pub get)
+        run: flutter pub get
+
+      # Langkah 5: Verifikasi kepatuhan format kode resmi Dart
+      - name: 📐 Check Dart Code Formatting (dart format)
+        run: dart format --output=none --set-exit-if-changed .
+
+      # Langkah 6: Analisis statis kode (Linter, error, warning)
+      - name: 🔍 Static Code Analysis (flutter analyze)
+        run: flutter analyze --fatal-infos --fatal-warnings
+
+      # Langkah 7: Jalankan seluruh pengujian otomatis (Unit, Widget & Architecture Test)
+      - name: 🧪 Execute Automated Test Suite (flutter test)
+        run: flutter test --coverage
+
+      # Langkah 8: Simpan laporan coverage jika pengujian berhasil
+      - name: 📊 Upload Coverage Report
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lcov-coverage-report
+          path: 07-week-7-clean-architecture/coverage/lcov.info
+          retention-days: 7
+

@@ -12,7 +12,8 @@ class FakeAnnouncementRepository implements AnnouncementRepository {
   final bool fail;
 
   @override
-  Future<({List<Announcement> announcements, Failure? failure})> getAnnouncements() async {
+  Future<({List<Announcement> announcements, Failure? failure})>
+  getAnnouncements() async {
     if (fail) {
       return (
         announcements: const <Announcement>[],
@@ -23,7 +24,9 @@ class FakeAnnouncementRepository implements AnnouncementRepository {
   }
 
   @override
-  Future<({Announcement? announcement, Failure? failure})> getAnnouncementById(int id) async {
+  Future<({Announcement? announcement, Failure? failure})> getAnnouncementById(
+    int id,
+  ) async {
     if (fail) {
       return (
         announcement: null,
@@ -75,22 +78,28 @@ void main() {
       expect(result.announcements, isEmpty);
     });
 
-    test('GetAnnouncementDetail mengembalikan detail yang cocok dengan ID', () async {
-      final repo = FakeAnnouncementRepository(items: sampleItems);
-      final result = await GetAnnouncementDetail(repo).call(2);
+    test(
+      'GetAnnouncementDetail mengembalikan detail yang cocok dengan ID',
+      () async {
+        final repo = FakeAnnouncementRepository(items: sampleItems);
+        final result = await GetAnnouncementDetail(repo).call(2);
 
-      expect(result.failure, isNull);
-      expect(result.announcement, isNotNull);
-      expect(result.announcement!.title, 'Workshop Clean Architecture');
-    });
+        expect(result.failure, isNull);
+        expect(result.announcement, isNotNull);
+        expect(result.announcement!.title, 'Workshop Clean Architecture');
+      },
+    );
 
-    test('GetAnnouncementDetail menolak ID non-positif dengan ValidationFailure', () async {
-      final repo = FakeAnnouncementRepository(items: sampleItems);
-      final result = await GetAnnouncementDetail(repo).call(0);
+    test(
+      'GetAnnouncementDetail menolak ID non-positif dengan ValidationFailure',
+      () async {
+        final repo = FakeAnnouncementRepository(items: sampleItems);
+        final result = await GetAnnouncementDetail(repo).call(0);
 
-      expect(result.failure, isA<ValidationFailure>());
-      expect(result.announcement, isNull);
-    });
+        expect(result.failure, isA<ValidationFailure>());
+        expect(result.announcement, isNull);
+      },
+    );
 
     test('GetAnnouncementDetail mengembalikan NotFoundFailure jika ID tidak ditemukan', () async {
       final repo = FakeAnnouncementRepository(items: sampleItems);

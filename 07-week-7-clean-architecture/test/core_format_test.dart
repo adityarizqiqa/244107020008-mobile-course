@@ -40,14 +40,8 @@ void main() {
         parseRouteParam('/announcements/99', '/announcements/:id', 'id'),
         '99',
       );
-      expect(
-        parseRouteParam('/notes/456', '/notes/:noteId', 'noteId'),
-        '456',
-      );
-      expect(
-        parseRouteParam('/other/123/extra', '/other/:id', 'id'),
-        isNull,
-      );
+      expect(parseRouteParam('/notes/456', '/notes/:noteId', 'noteId'), '456');
+      expect(parseRouteParam('/other/123/extra', '/other/:id', 'id'), isNull);
     });
   });
 }
