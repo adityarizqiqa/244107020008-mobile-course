@@ -1,0 +1,32 @@
+import '../../../../core/failures.dart';
+import '../entities/note.dart';
+import '../repositories/note_repository.dart';
+
+class UpdateNote {
+  const UpdateNote(this._repository);
+  final NoteRepository _repository;
+
+  Future<({Note? note, Failure? failure})> call({
+    required int id,
+    required String title,
+    String body = '',
+  }) {
+    if (id <= 0) {
+      return Future.value((
+        note: null,
+        failure: const ValidationFailure('ID catatan tidak valid.'),
+      ));
+    }
+    if (title.trim().isEmpty) {
+      return Future.value((
+        note: null,
+        failure: const ValidationFailure('Judul catatan tidak boleh kosong.'),
+      ));
+    }
+    return _repository.updateNote(
+      id: id,
+      title: title.trim(),
+      body: body.trim(),
+    );
+  }
+}
